@@ -18,5 +18,5 @@ The object loaded by the file
 Automatically read a file based on extension
 }
 \seealso{
-\code{\link[=get_file_reading_functions]{get_file_reading_functions()}}
+\code{\link[=get_file_reading_functions]{get_file_reading_functions()}} \code{\link[=autowrite]{autowrite()}}
 }

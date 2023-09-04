@@ -6,7 +6,7 @@
 #'   that read a file. All functions have ... arguments that can be used to extend the
 #'   basic function.
 #' 
-#' @seealso [autoread()]
+#' @seealso [autoread()] [get_file_writing_functions()]
 #' 
 #' @importFrom data.table fread
 #' @importFrom foreign read.dbf
@@ -46,7 +46,7 @@ get_file_reading_functions <- function(){
 #' @param file Full path to be read
 #' @param ... Other arguments to be passed to the particular loading function
 #'
-#' @seealso [get_file_reading_functions()]
+#' @seealso [get_file_reading_functions()] [autowrite()]
 #'  
 #' @return The object loaded by the file
 #' 
