@@ -20,7 +20,9 @@ get_file_writing_functions <- function(){
     rda = function(x, file, ...) save(x, file = file, ...),
     rds = function(x, file, ...) saveRDS(object = x, file = file, ...),
     shp = function(x, file, ...) sf::st_write(obj = x, dsn = file, ...),
-    tif = function(x, file, ...) terra::writeRaster(x = x, filename = file, ...),
+    tif = function(x, file, ...){
+      terra::writeRaster(x = x, filename = file, ..., overwrite = TRUE)
+    },
     txt = function(x, file, ...) writeLines(text = x, con = file, ...),
     yaml = function(x, file, ...) yaml::write_yaml(x = x, file = file, ...)
   )
