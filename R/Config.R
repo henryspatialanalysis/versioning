@@ -59,6 +59,19 @@ Config <- R6::R6Class(
       invisible(self)
     },
 
+    #' @description Get a subset of the `config_list`
+    #' 
+    #' @details If no parameters are passed, returns the entire config_list
+    #' 
+    #' @param ... Nested indices (character or numeric) down the config list
+    #' 
+    #' @seealso [pull_from_list()]
+    #' 
+    #' @return A subset of the list. If the item is NULL or missing, returns an error
+    get = function(...){
+      return(pull_from_list(self$config_list, ...))
+    },
+
     #' @description Construct a directory path from the config object
     #' 
     #' @details
@@ -76,7 +89,7 @@ Config <- R6::R6Class(
     get_dir_path = function(
       dir_name, custom_version = NULL, fail_if_does_not_exist = FALSE
     ){
-      dir_info <- pull_from_list(self$config_list, 'directories', dir_name)
+      dir_info <- self$get('directories', dir_name)
       versioned <- pull_from_list(dir_info, 'versioned')
       dir_base_path <- pull_from_list(dir_info, 'path')
       # Check that the version is a boolean value
@@ -90,7 +103,7 @@ Config <- R6::R6Class(
           assertthat::assert_that(length(custom_version) == 1)
           dir_version <- custom_version
         } else {
-          dir_version <- pull_from_list(self$config_list, 'versions', dir_name)
+          dir_version <- self$get('versions', dir_name)
         }
         dir_path <- file.path(dir_base_path, dir_version)
       } else {
@@ -127,9 +140,7 @@ Config <- R6::R6Class(
         custom_version = custom_version,
         fail_if_does_not_exist = fail_if_does_not_exist
       )
-      file_stub <- pull_from_list(
-        self$config_list, 'directories', dir_name, 'files', file_name
-      )
+      file_stub <- self$get('directories', dir_name, 'files', file_name)
       file_path <- file.path(dir_path, file_stub)
       if(fail_if_does_not_exist) assertthat::assert_that(file.exists(file_path))
       return(file_path)
