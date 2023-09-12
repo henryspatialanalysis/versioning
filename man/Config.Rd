@@ -22,6 +22,9 @@ config list. \code{versions} is itself a named list where each key corresponds t
 versioned folder in \code{directories} and the value gives the particular folder version
 (for example, a timestamp) that corresponds to the particular run.
 }
+\seealso{
+\code{\link[=pull_from_list]{pull_from_list()}}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -34,6 +37,7 @@ versioned folder in \code{directories} and the value gives the particular folder
 \itemize{
 \item \href{#method-Config-new}{\code{Config$new()}}
 \item \href{#method-Config-print}{\code{Config$print()}}
+\item \href{#method-Config-get}{\code{Config$get()}}
 \item \href{#method-Config-get_dir_path}{\code{Config$get_dir_path()}}
 \item \href{#method-Config-get_file_path}{\code{Config$get_file_path()}}
 \item \href{#method-Config-read}{\code{Config$read()}}
@@ -71,6 +75,30 @@ Print the list representation of the Config object
 \if{html}{\out{<div class="r">}}\preformatted{Config$print()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Config-get"></a>}}
+\if{latex}{\out{\hypertarget{method-Config-get}{}}}
+\subsection{Method \code{get()}}{
+Get a subset of the \code{config_list}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Config$get(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Nested indices (character or numeric) down the config list}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+If no parameters are passed, returns the entire config_list
+}
+
+\subsection{Returns}{
+A subset of the list. If the item is NULL or missing, returns an error
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Config-get_dir_path"></a>}}
@@ -205,7 +233,7 @@ explicitly named.}
 }
 \subsection{Returns}{
 Invisibly passes TRUE if successful
-Convenience function: write the config list to a file
+Convenience function: write the config list to a folder as 'config.yaml'
 }
 }
 \if{html}{\out{<hr>}}
@@ -213,20 +241,13 @@ Convenience function: write the config list to a file
 \if{latex}{\out{\hypertarget{method-Config-write_self}{}}}
 \subsection{Method \code{write_self()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Config$write_self(
-  dir_name,
-  file_name = "config.yaml",
-  ...,
-  custom_version = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Config$write_self(dir_name, ..., custom_version = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dir_name}}{Directory name}
-
-\item{\code{file_name}}{File name within that directory. Default 'config.yaml'}
 
 \item{\code{...}}{Optional file writing arguments to pass to \code{\link[=autowrite]{autowrite()}}}
 
