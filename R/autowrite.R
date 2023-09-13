@@ -19,7 +19,7 @@ get_file_writing_functions <- function(){
     csv = function(x, file, ...) data.table::fwrite(x = x, file = file, ...),
     rda = function(x, file, ...) save(x, file = file, ...),
     rds = function(x, file, ...) saveRDS(object = x, file = file, ...),
-    shp = function(x, file, ...) sf::st_write(obj = x, dsn = file, ...),
+    shp = function(x, file, ...) sf::st_write(obj = x, dsn = file, ..., append = FALSE),
     tif = function(x, file, ...){
       terra::writeRaster(x = x, filename = file, ..., overwrite = TRUE)
     },
