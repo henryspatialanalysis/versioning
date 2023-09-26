@@ -166,7 +166,7 @@ Config <- R6::R6Class(
         fail_if_does_not_exist = TRUE
       )
       # Automatically read it based on the extension
-      return(autoread(file_path))
+      return(autoread(file_path, ...))
     },
 
     #' Write an object to file based on the config
