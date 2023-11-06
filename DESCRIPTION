@@ -1,6 +1,6 @@
 Package: versioning
-Title: Versioned file I/O using a configuration file
-Version: 0.0.0.9000
+Title: Settings and File I/O using a Configuration YAML File
+Version: 0.1.0
 Authors@R: 
     person("Nathaniel", "Henry", , "nat@henryspatialanalysis.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8150-4988"))
@@ -27,3 +27,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr

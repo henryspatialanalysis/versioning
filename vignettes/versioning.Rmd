@@ -1,0 +1,189 @@
+---
+title: "Using the versioning package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using the versioning package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette introduces the **versioning** package, which aims to simplify management of
+project settings and file input/output by combining them in a single R object.
+
+R data pipelines commonly require reading and writing data to versioned directories. Each
+directory might correspond to one step of a multi-step process, where that version
+corresponds to particular settings for that step and a chain of previous steps that each
+have their own respective versions. This package describes a `Config` (configuration)
+object that makes it easy to read and write versioned data, based on YAML configuration
+files loaded and saved to each versioned folder.
+
+To get started, install and load the **versioning** package.
+
+```{r setup}
+# install.packages('versioning')
+library(versioning)
+```
+
+YAML is a natural format for storing project settings, since it can represent numeric,
+character, and logical settings as well as hierarchically-nested settings. We will use the
+'example_config.yaml' file that comes with the **versioning** package for this example. The
+following code block prints the contents of the YAML file to screen:
+
+```{r show-config}
+example_config_fp <- system.file('extdata', 'example_config.yaml', package = 'versioning')
+
+# Print the contents of the input YAML file
+file_contents <- system(paste('cat', example_config_fp), intern = T)
+message(paste(file_contents, collapse ='\n'))
+```
+
+We can load this YAML file by creating a new `Config` object. The only required argument
+when creating a Config object is `config_list`, which is either a nested R list of
+settings or (in our case) a filepath to a YAML file containing those settings.
+
+The Config object stores all those settings internally in the `config$config_list`
+attribute. The full list of settings can always be viewed using `print(config)` or
+`str(config$config_list)`.
+
+```{r load-config}
+# Load YAML file as a Config object
+config <- versioning::Config$new(config_list = example_config_fp)
+
+# Print the config file contents
+print(config)
+```
+
+You can always access the list of settings directly by subsetting `config$config_list`
+like a normal list, but the `Config$get()` method is sometimes preferable. For example, if
+you want to retrieve the setting listed under "a", `config$get('a')` is equivalent to
+`config$config_list[['a']]`, but will throw an error if the setting "a" does not exist.
+You can also use the `config$get()` method for nested settings, as shown below:
+
+```{r retrieve-settings}
+# Retrieve some example settings from the config file
+message("config$get('a') yields: ", config$get('a'))
+message("config$get('b') yields: ", config$get('b'))
+message("config$get('group_c', 'd') yields: ", config$get('group_c', 'd'))
+
+# Update a setting
+config$config_list$a <- 12345
+message("config$get('a') has been updated and now yields: ", config$get('a'))
+```
+
+There are two special sub-lists of the `config_list`, titled `directories` and `versions`,
+that can be handy for versioned R workflows with multiple steps. Each item in `directories`
+is structured with the following information:
+
+1. Name of the sublist: how the directory is accessed from the config (in our example, "raw_data" or "prepared_data")
+2. `versioned` (logical): Does the directory have versioned sub-directories?
+3. `path` (character): Path to the directory
+4. `files` (list): Named list of files within the directory
+
+In the example below, we'll show a very simple workflow where data is originally placed in
+a "raw_data" directory, which is not versioned, and then some summaries are written to a
+"prepared_data" directory, which is versioned. This mimics some data science workflows
+where differences between data preparation methods and model results need to be tracked
+over time. For this example, we will use temporary directories for both:
+
+```{r get-directories}
+# Update the raw_data and prepared_data directories to temporary directories for this
+# example
+config$config_list$directories$raw_data$path <- tempdir(check = T)
+config$config_list$directories$prepared_data$path <- tempdir(check = T)
+
+# Create directories
+message(
+  "Creating raw_data directory, which is not versioned: ",
+  config$get_dir_path('raw_data')
+)
+dir.create(config$get_dir_path('raw_data'), showWarnings = FALSE)
+
+message(
+  "Creating prepared_data directory, which is versioned: ",
+  config$get_dir_path('prepared_data')
+)
+dir.create(config$get_dir_path('prepared_data'), showWarnings = FALSE)
+
+# Copy the example input file to the raw data folder
+file.copy(
+  from = system.file('extdata', 'example_input_file.csv', package = 'versioning'),
+  to = config$get_file_path(dir_name = 'raw_data', file_name = 'a')
+)
+```
+
+As seen above, we can use the `config$get_dir_path()` to access directory paths and
+`config$get_file_path()` to access files within a directory. Note also that
+the path for the "prepared_data" folder ends with "v1": this is because
+`config$versions$prepared_data` is currently set to "v1". In a future run of this
+workflow, we could change the folder version by updating this setting.
+
+We can also use the `config$read()` and `config$write()` functions to read and write files
+within these directories.
+
+```{r read-write-files}
+# Read that same table from file
+df <- config$read(dir_name = 'raw_data', file_name = 'a')
+
+# Write a prepared table and a summary to file
+config$write(df, dir_name = 'prepared_data', file_name = 'prepared_table')
+config$write(
+  paste("The prepared table has", nrow(df), "rows and", ncol(df), "columns."),
+  dir_name = 'prepared_data',
+  file_name = 'summary_text'
+)
+
+# Both files should now appear in the "prepared_data" directory
+list.files(config$get_dir_path('prepared_data')) 
+```
+
+These use the `autoread()` and `autowrite()` functions behind the scenes, and support any
+file extensions listed in `get_file_reading_functions()`/`get_file_writing_functions()`.
+
+```{r get-supported-extensions}
+message(
+  "Supported file types for reading: ",
+  paste(sort(names(versioning::get_file_reading_functions())), collapse = ', ')
+)
+message(
+  "Supported file types for writing: ",
+  paste(sort(names(versioning::get_file_writing_functions())), collapse = ', ')
+)
+```
+
+There is also a helper function, `config$write_self()`, that will write the current config
+to a specified directory as a `config.yaml` file. For example, the following code block
+writes the current config to the versioned "prepared_data" directory:
+
+```{r write-self}
+# Write the config object to the "prepared_data" directory
+config$write_self(dir_name = 'prepared_data')
+# The "prepared_data" directory should now include "config.yaml"
+list.files(config$get_dir_path('prepared_data'))
+```
+
+While you can always update settings, versions, and file paths by changing the input YAML
+file, it is sometimes more convenient to update versions in code or through command line
+arguments passed to a script. In these cases, you can specify the `versions` argument when
+creating a new Config object. This argument will set or overwrite the particular versions
+listed, while keeping other versions unchanged. For example, the following code block
+loads the config, but changes (only) the "prepared_data" version to "v2".
+
+```{r update-versions}
+# Load a new custom config where the "prepared_data" version has been updated to "v2"
+custom_versions <- list(prepared_data = 'v2')
+config_v2 <- versioning::Config$new(
+  config_list = example_config_fp,
+  versions = custom_versions
+)
+print(config_v2$get_dir_path('prepared_data')) # Should now end in ".../v2"
+```
+
+For more information about using this package, see the documentation on the `Config`
+object: `help(Config, package = 'versioning')`.

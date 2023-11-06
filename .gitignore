@@ -82,3 +82,4 @@ rsconnect/
 *.exe
 *.out
 *.app
+inst/doc

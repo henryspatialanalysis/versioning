@@ -1,3 +1,8 @@
+a: 'foo'
+b: ['bar', 'baz']
+group_c:
+  d: 1e5
+  e: false
 directories:
   raw_data:
     versioned: FALSE
