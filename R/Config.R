@@ -1,17 +1,17 @@
 #' R6 Class representing a configuration object
-#' 
+#'
 #' @details
 #' The special sublist `directories` is structured to contain three items for each
 #' directory name:
 #'   - `versioned`: a T/F value specifying whether the directory is versioned
 #'   - `path`: the full path to the top level of that directory.
 #'   - `files`: A named list referencing file paths within that directory.
-#' 
+#'
 #' If the directory is versioned, a version must be set in the `versions` sublist of the
 #' config list. `versions` is itself a named list where each key corresponds to a
 #' versioned folder in `directories` and the value gives the particular folder version
 #' (for example, a timestamp) that corresponds to the particular run.
-#' 
+#'
 #' @importFrom assertthat assert_that
 #' @importFrom R6 R6Class
 #' @importFrom utils str
@@ -23,7 +23,7 @@ Config <- R6::R6Class(
     config_list = NULL,
 
     #' @description Create a new Config object
-    #' 
+    #'
     #' @param config_list either a list or a filepath to a YAML file containing that list
     #' @param versions (default NULL) A named list containing versions for versioned
     #'   directories. If passed, used to define or update items in `config_list$versions`.
@@ -60,31 +60,31 @@ Config <- R6::R6Class(
     },
 
     #' @description Get a subset of the `config_list`
-    #' 
+    #'
     #' @details If no parameters are passed, returns the entire config_list
-    #' 
+    #'
     #' @param ... Nested indices (character or numeric) down the config list
-    #' 
+    #'
     #' @seealso [pull_from_list()]
-    #' 
+    #'
     #' @return A subset of the list. If the item is NULL or missing, returns an error
     get = function(...){
       return(pull_from_list(self$config_list, ...))
     },
 
     #' @description Construct a directory path from the config object
-    #' 
+    #'
     #' @details
-    #' Works differently for versioned and non-versioned directories. See the class 
+    #' Works differently for versioned and non-versioned directories. See the class
     #' description for more information.
-    #' 
+    #'
     #' @param dir_name Directory name
     #' @param custom_version (character, default NULL) A custom version that will be
     #'   applied to this folder, rather than pulling from `config_list$versions[[dir]]`.
     #'   Only applies to versioned folders.
     #' @param fail_if_does_not_exist (logical, default FALSE) should this method return an
     #'   error if the directory in question does not already exist?
-    #' 
+    #'
     #' @return The full path to the directory
     get_dir_path = function(
       dir_name, custom_version = NULL, fail_if_does_not_exist = FALSE
@@ -118,11 +118,11 @@ Config <- R6::R6Class(
     },
 
     #' @description Construct a file path from the config object
-    #' 
+    #'
     #' @details
     #' Looks for the file path under:
     #' `config_list$directories[[dir_name]]$files[[file_name]]`
-    #' 
+    #'
     #' @param dir_name Directory name
     #' @param file_name File name within that directory
     #' @param custom_version (character, default NULL) A custom version that will be
@@ -130,7 +130,7 @@ Config <- R6::R6Class(
     #'   Only applies to versioned folders.
     #' @param fail_if_does_not_exist (logical, default FALSE) should this method return an
     #'   error if the directory in question does not already exist?
-    #' 
+    #'
     #' @return The full path to the file
     get_file_path = function(
       dir_name, file_name, custom_version = NULL, fail_if_does_not_exist = FALSE
@@ -147,7 +147,7 @@ Config <- R6::R6Class(
     },
 
     #' Read a file based on the config
-    #' 
+    #'
     #' @param dir_name Directory name
     #' @param file_name File name within that directory
     #' @param ... Optional file reading arguments to pass to [autoread()]
@@ -155,7 +155,7 @@ Config <- R6::R6Class(
     #'   applied to this folder, rather than pulling from `config_list$versions[[dir]]`.
     #'   Only applies to versioned folders. If passed, this argument must always be
     #'   explicitly named.
-    #' 
+    #'
     #' @return The object loaded by [autoread()]
     read = function(dir_name, file_name, ..., custom_version = NULL){
       # Get the file path
@@ -170,7 +170,7 @@ Config <- R6::R6Class(
     },
 
     #' Write an object to file based on the config
-    #' 
+    #'
     #' @param x Object to write
     #' @param dir_name Directory name
     #' @param file_name File name within that directory
@@ -179,7 +179,7 @@ Config <- R6::R6Class(
     #'   applied to this folder, rather than pulling from `config_list$versions[[dir]]`.
     #'   Only applies to versioned folders. If passed, this argument must always be
     #'   explicitly named.
-    #' 
+    #'
     #' @return Invisibly passes TRUE if successful
     write = function(x, dir_name, file_name, ..., custom_version = NULL){
       # Get the file path to write to
@@ -194,14 +194,14 @@ Config <- R6::R6Class(
     },
 
     #' Convenience function: write the config list to a folder as 'config.yaml'
-    #' 
+    #'
     #' @param dir_name Directory name
     #' @param ... Optional file writing arguments to pass to [autowrite()]
     #' @param custom_version (character, default NULL) A custom version that will be
     #'   applied to this folder, rather than pulling from `config_list$versions[[dir]]`.
     #'   Only applies to versioned folders. If passed, this argument must always be
     #'   explicitly named.
-    #' 
+    #'
     #' @return Invisibly passes TRUE if successful
     write_self = function(dir_name, ..., custom_version = NULL){
       # Get the file path to write to
