@@ -6,6 +6,12 @@
 \usage{
 require_namespace_or_stop(pkg)
 }
+\arguments{
+\item{pkg}{(\code{character(1)}) Package to be loaded}
+}
+\value{
+Silently loads namespace, or stops execution if package cannot be loaded
+}
 \description{
 Require that a namespace be loaded, or stop execution
 }

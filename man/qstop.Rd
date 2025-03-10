@@ -6,6 +6,12 @@
 \usage{
 qstop(...)
 }
+\arguments{
+\item{...}{Parameters passed to \code{stop()}}
+}
+\value{
+Concisely stops program execution
+}
 \description{
 Stop without listing the containing function call
 }
