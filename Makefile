@@ -4,23 +4,23 @@
 ##
 ## #######################################################################################
 
+R_EXEC := /usr/bin/R --no-save --quiet
+
 # Build package
-pkg-build:
-	@R CMD build ./;
+build:
+	@$(R_EXEC) -e "devtools::build()"
 
-# Get latest built package
-pkg-latest-version:
-	@ls versioning*.tar.gz | tail -1;
+# Build and install package
+install:
+	@$(R_EXEC) -e "devtools::install()"
 
-# Install the latest package version locally
-pkg-install:
-	@R CMD build ./
-	@R CMD INSTALL $$(ls versioning*.tar.gz | tail -1);
+# Build man pages
+build-docs:
+	@$(R_EXEC) -e "devtools::document()"
 
 # Check package for CRAN
-pkg-check:
-	@R CMD build ./
-	@R CMD check --as-cran $$(ls versioning*.tar.gz | tail -1);
+check:
+	@$(R_EXEC) -e "devtools::check(cran = TRUE)"
 
 # Convenience target to print all of the available targets in this file
 # From https://stackoverflow.com/questions/4219255
