@@ -15,3 +15,4 @@ Concisely stops program execution
 \description{
 Stop without listing the containing function call
 }
+\keyword{internal}

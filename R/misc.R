@@ -5,7 +5,7 @@
 #' @param ... Parameters passed to `stop()`
 #'
 #' @return Concisely stops program execution
-#' @internal
+#' @keywords internal
 qstop <- function(...) stop(..., call. = FALSE)
 
 #' Require that a namespace be loaded, or stop execution
@@ -13,7 +13,7 @@ qstop <- function(...) stop(..., call. = FALSE)
 #' @param pkg (`character(1)`) Package to be loaded
 #'
 #' @return Silently loads namespace, or stops execution if package cannot be loaded
-#' @internal
+#' @keywords internal
 require_namespace_or_stop <- function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)){
     paste('Package', pkg, 'is required.') |> qstop()

@@ -15,3 +15,4 @@ Silently loads namespace, or stops execution if package cannot be loaded
 \description{
 Require that a namespace be loaded, or stop execution
 }
+\keyword{internal}
