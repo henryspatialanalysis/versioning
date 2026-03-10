@@ -19,43 +19,6 @@ loaded from and saved to each versioned folder.
 install.packages('versioning')
 ```
 
-## Quick Start
-
-```r
-library(versioning)
-
-# Load the example config bundled with the package
-example_config_fp <- system.file('extdata', 'example_config.yaml', package = 'versioning')
-config <- Config$new(config_list = example_config_fp)
-
-# Print the full config
-print(config)
-
-# Access settings (throws an error if the key doesn't exist)
-config$get('a')             #> [1] "foo"
-config$get('group_c', 'd') #> [1] 1e+05
-
-# Point directories at temporary folders for this example
-config$config_list$directories$raw_data$path <- tempdir()
-config$config_list$directories$prepared_data$path <- tempdir()
-
-# Get directory and file paths
-config$get_dir_path('prepared_data')      # <tempdir>/v1  (versioned)
-config$get_file_path('raw_data', 'a')     # <tempdir>/example_input_file.csv
-
-# Copy the bundled input file into the raw_data directory
-file.copy(
-  from = system.file('extdata', 'example_input_file.csv', package = 'versioning'),
-  to   = config$get_file_path('raw_data', 'a')
-)
-
-# Read and write files (format inferred from extension)
-df <- config$read(dir_name = 'raw_data', file_name = 'a')
-config$write(df, dir_name = 'prepared_data', file_name = 'prepared_table')
-
-# Save the config itself to the prepared_data directory as config.yaml
-config$write_self(dir_name = 'prepared_data')
-```
 
 ## Config File Format
 
@@ -101,6 +64,46 @@ Each entry in `directories` contains:
 When `versioned: TRUE`, `config$get_dir_path('prepared_data')` returns
 `~/project/prepared_data/v1` (appending the version from `versions$prepared_data`).
 
+
+## Quick Start
+
+```r
+library(versioning)
+
+# Load the example config bundled with the package
+example_config_fp <- system.file('extdata', 'example_config.yaml', package = 'versioning')
+config <- Config$new(config_list = example_config_fp)
+
+# Print the full config
+print(config)
+
+# Access settings (throws an error if the key doesn't exist)
+config$get('a')             #> [1] "foo"
+config$get('group_c', 'd') #> [1] 1e+05
+
+# Point directories at temporary folders for this example
+config$config_list$directories$raw_data$path <- tempdir()
+config$config_list$directories$prepared_data$path <- tempdir()
+
+# Get directory and file paths
+config$get_dir_path('prepared_data')      # <tempdir>/v1  (versioned)
+config$get_file_path('raw_data', 'a')     # <tempdir>/example_input_file.csv
+
+# Copy the bundled input file into the raw_data directory
+file.copy(
+  from = system.file('extdata', 'example_input_file.csv', package = 'versioning'),
+  to   = config$get_file_path('raw_data', 'a')
+)
+
+# Read and write files (format inferred from extension)
+df <- config$read(dir_name = 'raw_data', file_name = 'a')
+config$write(df, dir_name = 'prepared_data', file_name = 'prepared_table')
+
+# Save the config itself to the prepared_data directory as config.yaml
+config$write_self(dir_name = 'prepared_data')
+```
+
+
 ## Overriding Versions Programmatically
 
 You can override specific versions at load time without editing the YAML file. This is
@@ -115,6 +118,7 @@ config_v2 <- Config$new(
 config_v2$get_dir_path('prepared_data')  # ~/project/prepared_data/v2
 ```
 
+
 ## Supported File Formats
 
 `config$read()` and `config$write()` dispatch on file extension via `autoread()` and
@@ -127,6 +131,7 @@ config_v2$get_dir_path('prepared_data')  # ~/project/prepared_data/v2
 
 Required packages for each format are loaded on demand (e.g. **data.table** for CSV,
 **sf** for shapefiles, **terra** for rasters).
+
 
 ## Further Reading
 
