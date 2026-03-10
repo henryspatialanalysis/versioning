@@ -1,6 +1,6 @@
 ^LICENSE\.md$
-^CLAUDE\.md$
 Makefile
 ^_pkgdown\.yml$
 ^\.github$
+^\.claude$
 ^docs$
