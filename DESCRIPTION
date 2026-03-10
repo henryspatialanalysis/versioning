@@ -27,6 +27,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+URL: https://henryspatialanalysis.github.io/versioning/, https://github.com/henryspatialanalysis/versioning
+BugReports: https://github.com/henryspatialanalysis/versioning/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

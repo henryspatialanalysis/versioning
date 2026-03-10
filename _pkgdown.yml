@@ -1,0 +1,32 @@
+url: https://henryspatialanalysis.github.io/versioning/
+
+home:
+  title: versioning
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/henryspatialanalysis/versioning
+
+reference:
+  - title: "Config object"
+    desc: "R6 class for versioned file I/O driven by a YAML configuration file"
+    contents:
+      - Config
+
+  - title: "Auto read/write"
+    desc: "Read and write files automatically based on their extension"
+    contents:
+      - autoread
+      - autowrite
+      - get_file_reading_functions
+      - get_file_writing_functions
+
+  - title: "Utilities"
+    desc: "Lower-level helpers used internally"
+    contents:
+      - pull_from_list
