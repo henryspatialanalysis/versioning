@@ -1,4 +1,4 @@
-# versioning
+# Package `versioning` <img src="man/figures/logo.png" align="right" height="139" />
 
 An R package for versioned file I/O using a configuration file.
 
