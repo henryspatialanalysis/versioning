@@ -2,6 +2,11 @@
 
 An R package for versioned file I/O using a configuration file.
 
+* _[Read the docs](https://henryspatialanalysis.github.io/versioning/)_
+* _Available on [CRAN](https://cran.r-project.org/package=versioning)_
+* _This is the R implementation of the versioning package; this same package is implemented in Python, and can be viewed on [GitHub](http://github.com/henryspatialanalysis/config-versioned/) and [PyPI](https://pypi.org/project/config-versioned/)._
+
+
 ## Overview
 
 R data pipelines commonly require reading and writing data to versioned directories. Each
@@ -12,6 +17,7 @@ have their own respective versions.
 The **versioning** package simplifies management of project settings and file I/O by
 combining them in a single `Config` object, backed by YAML configuration files that are
 loaded from and saved to each versioned folder.
+
 
 ## Installation
 
